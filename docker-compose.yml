@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: chatbot-db
+    environment:
+      POSTGRES_DB: chatbotdb
+      POSTGRES_USER: chatbot
+      POSTGRES_PASSWORD: chatbot1994
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - chatbot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatbot -d chatbotdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatbot-api
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/chatbotdb
+      SPRING_DATASOURCE_USERNAME: chatbot
+      SPRING_DATASOURCE_PASSWORD: chatbot1994
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_APPLICATION_NAME: chatbot-api
+      API_SECURITY_TOKEN_SECRET: my-secret-key
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALEC: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    networks:
+      - chatbot-network
+  whatsapp-node:
+    build:
+      context: ../../agentNode
+      dockerfile: Dockerfile
+    container_name: whatsapp-node
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: chatbot
+      DB_PASSWORD: chatbot1994
+      DB_NAME: chatbotdb
+    ports:
+      - "3000:3000"
+    networks:
+      - chatbot-network
+
+volumes:
+  postgres_data:
+
+networks:
+  chatbot-network:
