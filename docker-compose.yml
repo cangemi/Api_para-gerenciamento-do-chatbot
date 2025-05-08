@@ -29,11 +29,11 @@ services:
       - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/chatbotdb
-      SPRING_DATASOURCE_USERNAME: chatbot
-      SPRING_DATASOURCE_PASSWORD: chatbot1994
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_APPLICATION_NAME: chatbot-api
-      API_SECURITY_TOKEN_SECRET: my-secret-key
+      SPRING_DATASOURCE_USERNAME: *******
+      SPRING_DATASOURCE_PASSWORD:  *******
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME:  *******
+      SPRING_APPLICATION_NAME:  *******
+      API_SECURITY_TOKEN_SECRET:  *******
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALEC: org.hibernate.dialect.PostgreSQLDialect
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
@@ -51,9 +51,9 @@ services:
       NODE_ENV: production
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: chatbot
-      DB_PASSWORD: chatbot1994
-      DB_NAME: chatbotdb
+      DB_USER: *******
+      DB_PASSWORD:  *******
+      DB_NAME:  *******
     ports:
       - "3000:3000"
     networks:
